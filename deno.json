@@ -1,0 +1,27 @@
+{
+    "scripts": {
+        "test": "deno test --allow-net"
+    },
+    "tasks": {
+        "dev": "deno run -c tsconfig.json --allow-env --allow-net --allow-read --allow-ffi=C:\\Users\\Tudor\\AppData\\Local\\deno\\plug\\https\\github.com\\541100f8f0c3270d123f643c57e85f14b8a3f1c8a49b62b4f6f003e0345acf72.dll --watch main.ts"
+    },
+    "importMap": "./import_map.json",
+    "fmt": {
+        "indentWidth": 4,
+        "semiColons": true,
+        "no-unused-vars": false
+    },
+    "lint": {
+        "ignore": [
+            "dist",
+            "node_modules"
+        ],
+        "rules": {
+            "no-explicit-any": false
+        }
+    },
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
+    }
+}
