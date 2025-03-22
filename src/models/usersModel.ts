@@ -1,5 +1,4 @@
-import {DB} from "~/db/db.ts";
-import {Injectable} from "~/decorators/injectableDecorator.ts";
+import {DB, Injectable} from "~/core/index.ts";
 import {UserRegistration} from "~/interfaces/userInterface.ts";
 
 @Injectable()

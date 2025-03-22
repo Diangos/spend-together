@@ -1,4 +1,4 @@
-import {Injectable} from "~/decorators/injectableDecorator.ts";
+import {Injectable} from "~/core/index.ts";
 import {EmailType} from "~/enums/emailTypesEnum.ts";
 
 @Injectable()

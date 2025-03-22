@@ -1,5 +1,4 @@
-import {HttpMethod} from "~/types/httpMethod.ts";
-import {OpenAPIV3_1} from "~/types/openApiSchema.ts";
+import {HttpMethod, OpenAPIV3_1} from "~/core/index.ts";
 
 export interface RouteDefinitionInterface {
     path: string;

@@ -1,8 +1,6 @@
 import {Router} from "jsr:@oak/oak";
 import {Context} from "jsr:@oak/oak/context";
-import {controllers} from "~/decorators/controllerDecorator.ts";
-import {routes} from "~/decorators/routeDecorators.ts";
-import {DIContainer} from "~/dependencyInjection/diContainer.ts";
+import {controllers, DIContainer, routes} from "~/core/index.ts";
 
 type RequestHandler = (context: Context) => unknown;
 type ControllerWithHandlers = { [key: string]: RequestHandler };

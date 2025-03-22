@@ -1,6 +1,5 @@
 import {Context} from "jsr:@oak/oak";
-import {Controller} from "~/decorators/controllerDecorator.ts";
-import {Get, Post} from "~/decorators/routeDecorators.ts";
+import {Controller, Get, Post} from "~/core/index.ts";
 import UserModel from "~/models/usersModel.ts";
 import {userActivationSchema, userRegistrationSchema} from "~/schemas/userSchema.ts";
 import {GeneralService} from "~/services/generalService.ts";

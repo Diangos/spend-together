@@ -13,7 +13,7 @@ export class DB {
 
     public pool!: mysql.Pool;
 
-    constructor() {
+    private constructor() {
         if (DB._instance) {
             return DB._instance;
         }

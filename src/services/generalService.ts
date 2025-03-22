@@ -1,6 +1,6 @@
 import {Context} from "jsr:@oak/oak";
 import {ZodObject} from "npm:zod@3.24.2/lib/types.d.ts";
-import {Injectable} from "~/decorators/injectableDecorator.ts";
+import {Injectable} from "~/core/index.ts";
 
 @Injectable()
 export class GeneralService {

@@ -1,7 +1,7 @@
 // deno-lint-ignore-file no-explicit-any ban-types
-import {RouteDefinitionInterface} from "~/interfaces/routeDefinitionInterface.ts";
-import {HttpMethod} from "~/types/httpMethod.ts";
-import {OpenAPIV3_1} from "~/types/openApiSchema.ts";
+import {RouteDefinitionInterface} from "~/core/interfaces/routeDefinitionInterface.ts";
+import {HttpMethod} from "~/core/types/httpMethod.ts";
+import {OpenAPIV3_1} from "~/core/types/openApiSchema.ts";
 
 export const routes: Map<unknown, RouteDefinitionInterface[]> = new Map();
 

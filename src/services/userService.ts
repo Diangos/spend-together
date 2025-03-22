@@ -1,5 +1,5 @@
 import {hash} from "jsr:@felix/argon2";
-import {Injectable} from "~/decorators/injectableDecorator.ts";
+import {Injectable} from "~/core/index.ts";
 
 @Injectable()
 export class UserService {

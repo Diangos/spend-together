@@ -1,7 +1,5 @@
 import {Context} from "jsr:@oak/oak";
-import {controllers} from "~/decorators/controllerDecorator.ts";
-import {routes} from "~/decorators/routeDecorators.ts";
-import {OpenAPIV3_1} from "~/types/openApiSchema.ts";
+import {controllers, OpenAPIV3_1, routes} from "~/core/index.ts";
 
 function generateOpenApiSpec(): OpenAPIV3_1.Document {
     const spec: OpenAPIV3_1.Document = {
@@ -33,6 +31,7 @@ function generateOpenApiSpec(): OpenAPIV3_1.Document {
 
             spec.paths[path] = {
                 [route.requestMethod]: {
+                    tags: [prefix],
                     summary: route.routeMetadata.summary,
                     // operationId: route.methodName,
                     description: route.routeMetadata.description,
@@ -67,13 +66,11 @@ export async function swaggerMiddleware(
 
     if (path === "/openapi.json") {
         ctx.response.body = generateOpenApiSpec();
-        return;
     }
 
     if (path === "/docs") {
         ctx.response.body = await Deno.readTextFile(
-            Deno.cwd() + "/src/static/swagger.html",
+            Deno.cwd() + "/src/core/static/swagger.html",
         );
-        return;
     }
 }

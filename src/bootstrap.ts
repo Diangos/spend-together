@@ -1,7 +1,6 @@
 import {Application} from "jsr:@oak/oak";
+import {buildRouter, swaggerMiddleware} from "~/core/index.ts";
 import {staticMiddleware} from "~/middleware/static.ts";
-import {swaggerMiddleware} from "~/middleware/swagger.ts";
-import {buildRouter} from "~/routes/router.ts";
 
 import "~/controllers/usersController.ts";
 import env = Deno.env;
