@@ -1,5 +1,5 @@
 import {Injectable} from "~/core/index.ts";
-import {EmailType} from "~/enums/emailTypesEnum.ts";
+import {EmailType} from "~/enums/emailTypes.enum.ts";
 
 @Injectable()
 export class EmailService {

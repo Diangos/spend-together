@@ -1,5 +1,3 @@
-export {DB} from "./db/db.ts";
-
 export * from "./decorators/controllerDecorator.ts";
 export * from "./decorators/injectableDecorator.ts";
 export * from "./decorators/routeDecorators.ts";

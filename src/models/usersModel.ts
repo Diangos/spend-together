@@ -1,5 +1,6 @@
-import {DB, Injectable} from "~/core/index.ts";
-import {UserRegistration} from "~/interfaces/userInterface.ts";
+import {Injectable} from "~/core/index.ts";
+import {DB} from "~/db/db.ts";
+import {UserRegistration} from "~/interfaces/user.interface.ts";
 
 @Injectable()
 export default class UserModel {

@@ -130,18 +130,15 @@ export class UsersController {
                     error: 'Registration failure',
                     message: 'Email or username already in use'
                 };
-
-                return;
             } else {
                 ctx.response.status = 500;
                 ctx.response.body = {
                     error: 'Internal server error',
                     message: 'Something went wrong, please try again later.'
                 };
-                console.error("Unexpected registration error:", e);
-
-                return;
             }
+
+            return;
         }
 
         // TODO: Send activation email
