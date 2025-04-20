@@ -41,11 +41,11 @@ export class Logger {
     }
 
     static warn(...args: unknown[]) {
-        if (Logger.level >= LogLevel.WARN) console.warn(`${Logger.timestamp} ${Logger.Colors.Warning}[WARN ]${Logger.Colors.Reset}`, ...args);
+        if (Logger.level >= LogLevel.WARN) console.warn(`${Logger.timestamp}  ${Logger.Colors.Warning}[WARN]${Logger.Colors.Reset}`, ...args);
     }
 
     static info(...args: unknown[]) {
-        if (Logger.level >= LogLevel.INFO) console.info(`${Logger.timestamp} ${Logger.Colors.Info}[INFO ]${Logger.Colors.Reset}`, ...args);
+        if (Logger.level >= LogLevel.INFO) console.info(`${Logger.timestamp}  ${Logger.Colors.Info}[INFO]${Logger.Colors.Reset}`, ...args);
     }
 
     static debug(...args: unknown[]) {
