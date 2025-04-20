@@ -1,4 +1,5 @@
 import {Context} from "jsr:@oak/oak";
+import {Logger} from "~/classes/logger.class.ts";
 import {Controller, Get, Post} from "~/core/index.ts";
 import UserModel from "~/models/usersModel.ts";
 import {userActivationSchema, userRegistrationSchema} from "~/schemas/userSchema.ts";
@@ -42,6 +43,7 @@ export class UsersController {
     public async getUsers(ctx: Context) {
         const users = await this.userModel.getUsers();
         ctx.response.body = users[0];
+        Logger.debug('Users fetched:', users);
     }
 
     /**
@@ -136,6 +138,7 @@ export class UsersController {
                     error: 'Internal server error',
                     message: 'Something went wrong, please try again later.'
                 };
+                Logger.error('User creation failed:', e);
             }
 
             return;

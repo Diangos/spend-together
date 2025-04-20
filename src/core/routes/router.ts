@@ -1,5 +1,6 @@
 import {Router} from "jsr:@oak/oak";
 import {Context} from "jsr:@oak/oak/context";
+import {Logger} from "~/classes/logger.class.ts";
 import {controllers, DIContainer, routes} from "~/core/index.ts";
 
 type RequestHandler = (context: Context) => unknown;
@@ -8,10 +9,14 @@ type ControllerWithHandlers = { [key: string]: RequestHandler };
 export function buildRouter(): Router {
     const router = new Router();
 
+    Logger.debug(Logger.separator);
+    Logger.debug('Building router...');
     // For each registered controller...
-    for (const controller of controllers) {
+    for (let i = 0; i < controllers.length; i++) {
         // deno-lint-ignore ban-types
-        let prefix = Reflect.getMetadata("prefix", controller as Object) || "";
+        const controller = controllers[i] as Object & { name: string };
+        Logger.debug(` > ${controller.name.substring(0, controller.name.length - 10).toUpperCase()} controller`);
+        let prefix = Reflect.getMetadata("prefix", controller) || "";
         // Resolve an instance using the DI container.
         const instance = DIContainer.instance.resolve<ControllerWithHandlers>(controller as new (...args: unknown[]) => ControllerWithHandlers);
         const controllerRoutes = routes.get(controller) || [];
@@ -27,6 +32,8 @@ export function buildRouter(): Router {
             if (routeDef.path) {
                 fullPath += `/${routeDef.path}`
             }
+
+            Logger.debug(routeDef.requestMethod.padStart(8, ' '), '|', fullPath);
 
             const handler = (context: Context) => instance[routeDef.methodName](context);
 
@@ -47,5 +54,6 @@ export function buildRouter(): Router {
         }
     }
 
+    Logger.debug(Logger.separator);
     return router;
 }
