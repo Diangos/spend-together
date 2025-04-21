@@ -1,7 +1,7 @@
 import {Application, Context} from "jsr:@oak/oak";
 import {load} from "jsr:@std/dotenv";
-import {Logger} from "~/classes/logger.class.ts";
-import {buildRouter, swaggerMiddleware} from "~/core/index.ts";
+import {Logger} from "~/core/classes/logger.class.ts";
+import {buildRouter, loggerMiddleware, swaggerMiddleware} from "~/core/index.ts";
 import {DB} from "~/db/db.ts";
 import {errorMiddleware, staticMiddleware} from "~/middleware/index.ts";
 
@@ -27,6 +27,8 @@ export async function bootstrap() {
 
   app.use(errorMiddleware);
   Logger.info(`Error Middleware loaded`);
+  app.use(loggerMiddleware);
+  Logger.info(`Logger Middleware loaded`);
   app.use(router.routes());
   app.use(router.allowedMethods());
   Logger.info('All routes registered');
