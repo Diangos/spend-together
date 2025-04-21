@@ -32,6 +32,7 @@
     "jsr:@std/path@0.221": "0.221.0",
     "jsr:@std/path@1": "1.0.8",
     "npm:mysql2@*": "3.13.0",
+    "npm:mysql2@3.13.0": "3.13.0",
     "npm:path-to-regexp@6.3.0": "6.3.0",
     "npm:path-to-regexp@^6.3.0": "6.3.0",
     "npm:prisma@latest": "6.5.0",
