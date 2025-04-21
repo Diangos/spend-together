@@ -16,9 +16,8 @@ export async function bootstrap() {
   const port = Number(Deno.env.get("PORT") ?? 8000);
 
   try {
-    Logger.info(`Creating the DB connection pool`);
     await DB.instance.pool.getConnection();
-    Logger.info(`DB connection pool created successfully`);
+    Logger.info(`✔️ DB connection pool created successfully`);
   } catch (error) {
     Logger.error("Database connection failed:", error);
     await DB.instance.pool.end();
@@ -26,16 +25,16 @@ export async function bootstrap() {
   }
 
   app.use(errorMiddleware);
-  Logger.info(`Error Middleware loaded`);
+  Logger.info(`✔️ Error Middleware loaded`);
   app.use(loggerMiddleware);
-  Logger.info(`Logger Middleware loaded`);
+  Logger.info(`✔️ Logger Middleware loaded`);
   app.use(router.routes());
   app.use(router.allowedMethods());
-  Logger.info('All routes registered');
+  Logger.info('✔️ All routes registered');
   app.use(swaggerMiddleware);
-  Logger.info(`Swagger Middleware loaded`);
+  Logger.info(`✔️ Swagger Middleware loaded`);
   app.use(staticMiddleware);
-  Logger.info(`Static Middleware loaded`);
+  Logger.info(`✔️ Static Middleware loaded`);
 
   // Explicit 404 Fallback
   app.use((ctx: Context) => {
@@ -47,7 +46,7 @@ export async function bootstrap() {
   Logger.info(Logger.separator);
 
   try {
-    Logger.info(`Server running on http://localhost:${port}`);
+    Logger.info(`🚀 Server running on http://localhost:${port}`);
     await app.listen({port});
   } catch (error: unknown) {
     Logger.error(`The server encountered an unhandled error: ${error}`);
