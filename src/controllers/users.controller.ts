@@ -1,8 +1,10 @@
 import {Context} from "jsr:@oak/oak";
-import {Logger} from "~/classes/logger.class.ts";
+import {Logger} from "~/core/classes/logger.class.ts";
 import {Controller, Get, Post} from "~/core/index.ts";
+import {EmailType} from "~/enums/emailTypes.enum.ts";
 import UserModel from "~/models/usersModel.ts";
-import {userActivationSchema, userRegistrationSchema} from "~/schemas/userSchema.ts";
+import {userActivationCodeRegenerationSchema, userActivationSchema, userRegistrationSchema} from "~/schemas/userSchema.ts";
+import {EmailService} from "~/services/emailService.ts";
 import {GeneralService} from "~/services/generalService.ts";
 import {UserService} from "~/services/userService.ts";
 
@@ -12,6 +14,7 @@ export class UsersController {
         public userModel: UserModel,
         public userService: UserService,
         public generalService: GeneralService,
+        public emailService: EmailService,
     ) {
     }
 
@@ -43,7 +46,6 @@ export class UsersController {
     public async getUsers(ctx: Context) {
         const users = await this.userModel.getUsers();
         ctx.response.body = users[0];
-        Logger.debug('Users fetched:', users);
     }
 
     /**
@@ -105,11 +107,6 @@ export class UsersController {
         const data = parseResult.data;
 
         if (!success) {
-            ctx.response.status = 401;
-            ctx.response.body = {
-                error: 'Bad request',
-                message: parseResult.error.format(),
-            };
             return;
         }
 
@@ -125,6 +122,8 @@ export class UsersController {
                 message: "User registered successfully.",
                 user,
             };
+
+            this.emailService.sendEmail(EmailType.REGISTRATION, user);
         } catch (e: unknown) {
             if (this.generalService.isErrorADuplicateError(e)) {
                 ctx.response.status = 400;
@@ -143,8 +142,6 @@ export class UsersController {
 
             return;
         }
-
-        // TODO: Send activation email
     }
 
     @Post("activate-account", {
@@ -202,11 +199,82 @@ export class UsersController {
             return;
         }
 
-        await this.userModel.activateUser(data.email, data.code);
+        try {
+            await this.userModel.activateUser(data.email, data.code);
+        } catch (e) {
+            Logger.error('Error creating user:', e);
+        }
 
         ctx.response.status = 200;
         ctx.response.body = {
             message: 'Account activated successfully'
+        };
+    }
+
+    @Post("regenerate-code", {
+        summary: "Regenerates the code to activate the user",
+        description: "Regenerates the code to activate the user and sends the user another email if possible.",
+        tags: ["Users", "Activation"],
+        requestBody: {
+            required: true,
+            description: "JSON with email",
+            content: {
+                "application/json": {
+                    schema: {
+                        type: "object",
+                        required: ["email"],
+                        properties: {
+                            email: { type: "string", format: "email" },
+                        },
+                    },
+                    examples: {
+                        example1: {
+                            value: {
+                                email: "bibi@gigi.com",
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        responses: {
+            "200": {
+                description: "Code regenerated successfully",
+                content: {
+                    "application/json": {
+                        schema: {
+                            type: "object",
+                            properties: {
+                                message: { type: "string" },
+                            },
+                        },
+                    },
+                },
+            },
+            "401": {
+                description: "Inexistent or no email provided or the user is already activated",
+            },
+        },
+    })
+    public async regenerateCode(ctx: Context) {
+        const {success, parseResult} = await this.generalService.getAndValidateBody(ctx, userActivationCodeRegenerationSchema);
+        const data = parseResult.data;
+
+        if (!success) {
+            return;
+        }
+
+        try {
+            const activationCode = this.userService.generateSecureActivationCode();
+            await this.userModel.regenerateActivationCode(data.email);
+            this.emailService.sendEmail(EmailType.ACTIVATION, {email: data.email, code: activationCode});
+        } catch (e) {
+            Logger.error('Error creating user:', e);
+        }
+
+        ctx.response.status = 200;
+        ctx.response.body = {
+            message: 'Activation code sent successfully'
         };
     }
 }

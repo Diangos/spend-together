@@ -1,5 +1,6 @@
 import {Context} from "jsr:@oak/oak";
 import {ZodObject} from "npm:zod@3.24.2/lib/types.d.ts";
+import {Logger} from "~/core/classes/logger.class.ts";
 import {Injectable} from "~/core/index.ts";
 
 @Injectable()
@@ -10,13 +11,16 @@ export class GeneralService {
         const parseResult = schema.safeParse(body);
 
         if (!parseResult.success) {
-            ctx.response.status = 400;
+            const formattedError = parseResult.error.format();
+
+            ctx.response.status = 401;
             ctx.response.body = {
                 error: 'Validation failure',
-                message: parseResult.error.format()
+                message: formattedError
             };
 
             success = false;
+            Logger.warn('Invalid user activation data:', formattedError);
         }
 
         return {success, parseResult};

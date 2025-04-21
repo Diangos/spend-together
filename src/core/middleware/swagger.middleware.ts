@@ -1,4 +1,5 @@
 import {Context} from "jsr:@oak/oak";
+import {Logger} from "~/core/classes/logger.class.ts";
 import {controllers, OpenAPIV3_1, routes} from "~/core/index.ts";
 
 function generateOpenApiSpec(): OpenAPIV3_1.Document {
@@ -10,7 +11,7 @@ function generateOpenApiSpec(): OpenAPIV3_1.Document {
             description: "An API for the main application",
         },
         servers: [{
-            url: "http://localhost:8000/api", // TODO: build the URL dynamically
+            url: `http://localhost:${Number(Deno.env.get("PORT") ?? 8000)}/api`, // TODO: build the URL dynamically
             description: "Local dev server",
         }],
         paths: {},
@@ -64,13 +65,17 @@ export async function swaggerMiddleware(
         return;
     }
 
-    if (path === "/openapi.json") {
-        ctx.response.body = generateOpenApiSpec();
-    }
+    try {
+        if (path === "/openapi.json") {
+            ctx.response.body = generateOpenApiSpec();
+        }
 
-    if (path === "/docs") {
-        ctx.response.body = await Deno.readTextFile(
-            Deno.cwd() + "/src/core/static/swagger.html",
-        );
+        if (path === "/docs") {
+            ctx.response.body = await Deno.readTextFile(
+                Deno.cwd() + "/src/core/static/swagger.html",
+            );
+        }
+    } catch (e) {
+        Logger.error('Error in swagger middleware:', e);
     }
 }

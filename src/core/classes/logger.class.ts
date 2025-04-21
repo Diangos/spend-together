@@ -12,11 +12,12 @@ export class Logger {
         'DEBUG': LogLevel.DEBUG
     }
     static Colors = {
-        Error: "\x1b[38;2;255;51;0m",      // Bright Red (#FF3300)
-        Warning: "\x1b[38;2;255;204;0m",   // Orange Yellow (#FFCC00)
-        Info: "\x1b[38;2;75;162;135m",      // Digital soil green (#4BA287)
-        Debug: "\x1b[38;2;128;128;128m",   // Dark Grey
-        Reset: "\x1b[0m",
+        Error:      "\x1b[38;2;255;51;0m",      // Bright Red (#FF3300)
+        Warning:    "\x1b[38;2;255;204;0m",     // Orange Yellow (#FFCC00)
+        Info:       "\x1b[38;2;75;162;135m",    // Digital soil green (#4BA287)
+        Debug:      "\x1b[38;2;128;128;128m",   // Dark Grey
+        Highlight:  "\x1b[38;2;99;192;50m",     // Green
+        Reset:      "\x1b[0m",
     }
 
     static get timestamp() {
@@ -34,6 +35,13 @@ export class Logger {
         }
 
         return Logger.enumValues[logLevel] ?? Logger.defaultLevel;
+    }
+
+    /**
+     * Highlights/emphasizes the string with colors for easier reading in logs.
+     */
+    static em(input: string) {
+        return `${Logger.Colors.Highlight}${input}${Logger.Colors.Reset}`;
     }
 
     static error(...args: unknown[]) {

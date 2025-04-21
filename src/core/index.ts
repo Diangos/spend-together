@@ -4,7 +4,8 @@ export * from "./decorators/routeDecorators.ts";
 
 export * from "./dependencyInjection/diContainer.ts";
 
-export * from "./middleware/swagger.ts"
+export * from "./middleware/swagger.middleware.ts"
+export * from "./middleware/logger.middleware.ts"
 
 export * from "./routes/router.ts"
 

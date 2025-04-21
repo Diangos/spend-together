@@ -1,6 +1,6 @@
 import {Router} from "jsr:@oak/oak";
 import {Context} from "jsr:@oak/oak/context";
-import {Logger} from "~/classes/logger.class.ts";
+import {Logger} from "~/core/classes/logger.class.ts";
 import {controllers, DIContainer, routes} from "~/core/index.ts";
 
 type RequestHandler = (context: Context) => unknown;

@@ -1,3 +1,4 @@
+import {Logger} from "~/core/classes/logger.class.ts";
 import {Injectable} from "~/core/index.ts";
 import {EmailType} from "~/enums/emailTypes.enum.ts";
 
@@ -18,5 +19,6 @@ export class EmailService {
 
     private sendRegistrationEmail(data: unknown) {
         // TODO: Implement email sending
+        Logger.debug('Sending registration email', data);
     }
 }

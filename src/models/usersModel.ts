@@ -1,3 +1,5 @@
+import {Connection} from "npm:mysql2@3.13.0/typings/mysql/index.d.ts";
+import {Logger} from "~/core/classes/logger.class.ts";
 import {Injectable} from "~/core/index.ts";
 import {DB} from "~/db/db.ts";
 import {UserRegistration} from "~/interfaces/user.interface.ts";
