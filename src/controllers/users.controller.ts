@@ -202,19 +202,20 @@ export class UsersController {
         try {
             await this.userModel.activateUser(data.email, data.code);
         } catch (e) {
-            Logger.error('Error creating user:', e);
+            Logger.error(`Activating user with email ${Logger.em(data.email)} failed.`, e);
+            ctx.response.status = 400;
+            ctx.response.body = {message: 'Invalid email or code or the user is already activated.'};
+            return;
         }
 
         ctx.response.status = 200;
-        ctx.response.body = {
-            message: 'Account activated successfully'
-        };
+        ctx.response.body = {message: 'Account activated successfully'};
     }
 
     @Post("regenerate-code", {
         summary: "Regenerates the code to activate the user",
         description: "Regenerates the code to activate the user and sends the user another email if possible.",
-        tags: ["Users", "Activation"],
+        tags: ["Users", "Activation", "Code"],
         requestBody: {
             required: true,
             description: "JSON with email",
@@ -256,6 +257,51 @@ export class UsersController {
             },
         },
     })
+    @Post("resend-code", {
+        summary: "Resends the code to the user",
+        description: "Regenerates the code to the user's specified email address, extending its validity to 24h.",
+        tags: ["Users", "Activation", "Code"],
+        requestBody: {
+            required: true,
+            description: "JSON with email",
+            content: {
+                "application/json": {
+                    schema: {
+                        type: "object",
+                        required: ["email"],
+                        properties: {
+                            email: { type: "string", format: "email" },
+                        },
+                    },
+                    examples: {
+                        example1: {
+                            value: {
+                                email: "bibi@gigi.com",
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        responses: {
+            "200": {
+                description: "Code regenerated successfully",
+                content: {
+                    "application/json": {
+                        schema: {
+                            type: "object",
+                            properties: {
+                                message: { type: "string" },
+                            },
+                        },
+                    },
+                },
+            },
+            "400": {
+                description: "Inexistent or no email provided or the user is already activated",
+            },
+        },
+    })
     public async regenerateCode(ctx: Context) {
         const {success, parseResult} = await this.generalService.getAndValidateBody(ctx, userActivationCodeRegenerationSchema);
         const data = parseResult.data;
@@ -265,11 +311,20 @@ export class UsersController {
         }
 
         try {
-            const activationCode = this.userService.generateSecureActivationCode();
-            await this.userModel.regenerateActivationCode(data.email);
-            this.emailService.sendEmail(EmailType.ACTIVATION, {email: data.email, code: activationCode});
+            if (ctx.request.url.pathname.endsWith("regenerate-code")) {
+                const activationCode = this.userService.generateSecureActivationCode();
+                await this.userModel.regenerateActivationCode(activationCode, data.email);
+                this.emailService.sendEmail(EmailType.ACTIVATION, {email: data.email, code: activationCode});
+            } else {
+                await this.userModel.extendActivationCodeValidity(data.email);
+            }
         } catch (e) {
-            Logger.error('Error creating user:', e);
+            Logger.error('Error when trying to handle activation code:', e);
+            ctx.response.status = 400;
+            ctx.response.body = {
+                message: 'Invalid email or the user is already activated'
+            };
+            return;
         }
 
         ctx.response.status = 200;

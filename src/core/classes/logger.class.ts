@@ -39,6 +39,7 @@ export class Logger {
 
     /**
      * Highlights/emphasizes the string with colors for easier reading in logs.
+     * @param {string} input - the input to emphasize
      */
     static em(input: string) {
         return `${Logger.Colors.Highlight}${input}${Logger.Colors.Reset}`;

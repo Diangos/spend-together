@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         row.querySelector('.username').textContent = user.username;
         row.querySelector('.lastName').textContent = user.lastName;
         row.querySelector('.firstName').textContent = user.firstName;
+        row.querySelector('.active').textContent = user.verifiedAt === null ? 'No' : 'Yes';
         row.querySelector('.lastLogin').textContent = user.lastLogin;
         row.querySelector('.createdAt').textContent = user.createdAt;
         usersTable.appendChild(row);

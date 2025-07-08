@@ -4,13 +4,32 @@ POST http://localhost:8000/api/v1/users/register-user
 Content-Type: application/json
 
 {
-  "email": "tudoreaux+hihi2@gmail.com",
-  "password": "BibiIsABitch2",
-  "username": "Diangos4",
-  "firstName": "Gigi",
-  "lastName": "Bibi"
+    "email": "tudoreaux+hihi2@gmail.com",
+    "password": "BibiIsABitch2",
+    "username": "Diangos4",
+    "firstName": "Gigi",
+    "lastName": "Bibi"
 }
 
 ###
 # @name Get all users
 GET http://localhost:8000/api/v1/users
+
+###
+# @name Activate user
+POST http://localhost:8000/api/v1/users/activate-account
+Content-Type: application/json
+
+{
+    "email": "tudoreaux+hihi2@gmail.com",
+    "code": "H68DWH"
+}
+
+###
+# @name Regenerate code
+POST http://localhost:8000/api/v1/users/regenerate-code
+Content-Type: application/json
+
+{
+    "email": "tudoreaux+hihi2@gmail.com"
+}
