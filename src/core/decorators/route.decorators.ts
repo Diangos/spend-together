@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any ban-types
-import {RouteDefinitionInterface} from "~/core/interfaces/routeDefinitionInterface.ts";
+import {RouteDefinitionInterface} from "~/core/interfaces/route-definition.interface.ts";
 import {HttpMethod} from "~/core/types/httpMethod.ts";
 import {OpenAPIV3_1} from "~/core/types/openApiSchema.ts";
 

@@ -2,13 +2,13 @@ import {Context} from "jsr:@oak/oak";
 import {Logger} from "~/core/classes/logger.class.ts";
 import {Controller, Get, Post} from "~/core/index.ts";
 import {EmailType} from "~/enums/emailTypes.enum.ts";
-import UserModel from "~/models/usersModel.ts";
-import {userActivationCodeRegenerationSchema, userActivationSchema, userRegistrationSchema} from "~/schemas/userSchema.ts";
-import {EmailService} from "~/services/emailService.ts";
-import {GeneralService} from "~/services/generalService.ts";
-import {UserService} from "~/services/userService.ts";
+import UserModel from "~/models/users.model.ts";
+import {userActivationCodeRegenerationSchema, userActivationSchema, userRegistrationSchema} from "~/schemas/user.schema.ts";
+import {EmailService} from "~/services/email.service.ts";
+import {GeneralService} from "~/services/general.service.ts";
+import {UserService} from "~/services/user.service.ts";
 
-@Controller("/users")
+@Controller("users")
 export class UsersController {
     constructor(
         public userModel: UserModel,

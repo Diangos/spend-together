@@ -22,6 +22,7 @@
     "jsr:@std/crypto@1": "1.0.4",
     "jsr:@std/dotenv@*": "0.225.3",
     "jsr:@std/encoding@0.221": "0.221.0",
+    "jsr:@std/encoding@0.224.0": "0.224.0",
     "jsr:@std/encoding@1": "1.0.7",
     "jsr:@std/encoding@^1.0.7": "1.0.7",
     "jsr:@std/fmt@0.221": "0.221.0",
@@ -31,6 +32,7 @@
     "jsr:@std/media-types@1": "1.1.0",
     "jsr:@std/path@0.221": "0.221.0",
     "jsr:@std/path@1": "1.0.8",
+    "jsr:@zaubrik/djwt@*": "3.0.2",
     "npm:mysql2@*": "3.13.0",
     "npm:mysql2@3.13.0": "3.13.0",
     "npm:path-to-regexp@6.3.0": "6.3.0",
@@ -156,6 +158,9 @@
     "@std/encoding@0.221.0": {
       "integrity": "d1dd76ef0dc5d14088411e6dc1dede53bf8308c95d1537df1214c97137208e45"
     },
+    "@std/encoding@0.224.0": {
+      "integrity": "efb6dca97d3e9c31392bd5c8cfd9f9fc9decf5a1f4d1f78af7900a493bcf89b5"
+    },
     "@std/encoding@1.0.7": {
       "integrity": "f631247c1698fef289f2de9e2a33d571e46133b38d042905e3eac3715030a82d"
     },
@@ -189,6 +194,12 @@
     },
     "@std/path@1.0.8": {
       "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
+    },
+    "@zaubrik/djwt@3.0.2": {
+      "integrity": "8070adaa49cd9e5d2b8ae82fd461132c966ef2f8ff8378db4a4da8df4f17c664",
+      "dependencies": [
+        "jsr:@std/encoding@0.224.0"
+      ]
     }
   },
   "npm": {

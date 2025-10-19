@@ -1,21 +1,27 @@
 import {Connection} from "npm:mysql2@3.13.0/typings/mysql/index.d.ts";
 import {Logger} from "~/core/classes/logger.class.ts";
-import {Injectable} from "~/core/index.ts";
-import {DB} from "~/db/db.ts";
+import {Injectable, Model} from "~/core/index.ts";
 import {UserRegistration} from "~/interfaces/user.interface.ts";
 
 @Injectable()
-export default class UserModel {
-    private pool;
-
-    constructor() {
-        // deno-lint-ignore no-explicit-any
-        this.pool = DB.instance.pool as any;
-    }
+export default class UserModel extends Model {
 
     public getUserById(id: unknown) {
         // This method should fetch and return a user by ID
         return { id: id, name: 'Alice' };
+    }
+
+    public async getUserByUsername(username: string) {
+        // This method should fetch and return a user by ID
+        const results = await this.pool.query(`
+            SELECT
+                u.id, u.email, u.username, u.password, u.lastName, u.firstName, u.lastLogin, u.createdAt, u.verifiedAt
+            FROM users u
+            WHERE username = ?
+            LIMIT 1
+        `, [username])
+
+                return results[0][0] ?? null;
     }
 
     public getUsers(limit = 500, offset = 0) {
@@ -34,11 +40,10 @@ export default class UserModel {
         try {
             await connection.beginTransaction();
 
-            const [userResult] = await this.pool.query(
-                `INSERT INTO users (email, username, password, firstName, lastName)
-                VALUES (?, ?, ?, ?, ?)`,
-                [user.email, user.username, user.password, user.firstName, user.lastName],
-            );
+            const [userResult] = await this.pool.query(`
+                INSERT INTO users (email, username, password, firstName, lastName)
+                VALUES (?, ?, ?, ?, ?)
+            `, [user.email, user.username, user.password, user.firstName, user.lastName]);
             const userId = userResult.insertId;
 
             await connection.query(`
@@ -187,5 +192,27 @@ export default class UserModel {
             `INSERT INTO codes (code, userId, usedFor, expiresAt) VALUES (?, ?, 'activation', DATE_ADD(NOW(), INTERVAL 24 HOUR))`,
             [code, userId],
         );
+    }
+
+    public getRolesForUser(userId: number): Promise<string[]> {
+        // const [rows] = await this.pool.query(
+        //     `SELECT r.name FROM roles r
+        //      JOIN user_roles ur ON r.id = ur.roleId
+        //      WHERE ur.userId = ?`,
+        //     [userId]
+        // );
+        //
+        // return rows.map((row: { name: string }) => row.name);
+
+                // Temporary default implementation until DB roles are implemented
+        return Promise.resolve(['user']);
+    }
+
+    public setLastLoggedIn(userId: number) {
+        this.pool.query(`
+            UPDATE users
+            SET lastLogin = NOW()
+            WHERE id = ?
+        `, [userId])
     }
 }

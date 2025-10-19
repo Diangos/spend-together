@@ -5,6 +5,7 @@ import {buildRouter, loggerMiddleware, swaggerMiddleware} from "~/core/index.ts"
 import {DB} from "~/db/db.ts";
 import {errorMiddleware, staticMiddleware} from "~/middleware/index.ts";
 
+import "~/controllers/authentication.controller.ts";
 import "~/controllers/users.controller.ts";
 
 export async function bootstrap() {

@@ -13,7 +13,7 @@ export class GeneralService {
         if (!parseResult.success) {
             const formattedError = parseResult.error.format();
 
-            ctx.response.status = 401;
+                        ctx.response.status = 400;
             ctx.response.body = {
                 error: 'Validation failure',
                 message: formattedError
