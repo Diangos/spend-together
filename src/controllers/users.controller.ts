@@ -7,6 +7,7 @@ import {userActivationCodeRegenerationSchema, userActivationSchema, userRegistra
 import {EmailService} from "~/services/email.service.ts";
 import {GeneralService} from "~/services/general.service.ts";
 import {UserService} from "~/services/user.service.ts";
+import {Authorize} from "~/core/decorators/authentication.decorator.ts";
 
 @Controller("users")
 export class UsersController {
@@ -18,6 +19,7 @@ export class UsersController {
     ) {
     }
 
+    @Authorize()
     @Get("", {
         summary: "Get all users",
         description: "Retrieves a list of all users",

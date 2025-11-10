@@ -1,13 +1,17 @@
 import {create, getNumericDate, Header, Payload} from "jsr:@zaubrik/djwt";
+import {load} from "jsr:@std/dotenv";
 import {Injectable} from "~/core/index.ts";
 
 // ───────────────────────────────────────────────────────────────────────────────
 // TODO: replace with DOTENV variables and secure secrets management
 // ───────────────────────────────────────────────────────────────────────────────
+
+await load({ envPath: "./.env", export: true });
 const ACCESS_TTL_MIN = 15;         // short-lived access token
 
 // HS256 for simplicity; prefer RS256/ES256 if you rotate keys/public verify
 const accessSecretEnv = Deno.env.get("ACCESS_SECRET");
+
 if (!accessSecretEnv) {
     throw new Error("ACCESS_SECRET environment variable is not set. Refusing to start for security reasons.");
 }

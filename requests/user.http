@@ -4,9 +4,9 @@ POST http://localhost:8000/api/v1/users/register-user
 Content-Type: application/json
 
 {
-    "email": "tudoreaux@gmail.com",
-    "password": "Quagga1zZebra",
-    "username": "Diangos",
+    "email": "gigi@gmail.com",
+    "password": "GigiGigiGigi",
+    "username": "Gigi2",
     "firstName": "Gigi",
     "lastName": "Bibi"
 }
@@ -21,8 +21,8 @@ POST http://localhost:8000/api/v1/users/activate-account
 Content-Type: application/json
 
 {
-    "email": "tudoreaux@gmail.com",
-    "code": "G8EYM7"
+    "email": "gigi@gmail.com",
+    "code": "RPQ4WJ"
 }
 
 ###
@@ -31,7 +31,7 @@ POST http://localhost:8000/api/v1/users/regenerate-code
 Content-Type: application/json
 
 {
-    "email": "tudoreaux+hihi2@gmail.com"
+    "email": "gigi@gmail.com"
 }
 
 ###
@@ -40,6 +40,6 @@ POST http://localhost:8000/api/v1/authentication/login
 Content-Type: application/json
 
 {
-    "username": "Diangos",
-    "password": "Quagga1zZebra"
+    "username": "Gigi",
+    "password": "GigiGigiGigi"
 }

@@ -12,7 +12,7 @@ function createRouteDecorator(method: HttpMethod) {
         }
 
         return (target: Object, propertyKey: string|symbol, _descriptor?: PropertyDescriptor) => {
-            const targetConstructor = target.constructor
+            const targetConstructor = target.constructor;
             const controllerRoutes = routes.get(targetConstructor) ?? [];
 
             controllerRoutes.push({

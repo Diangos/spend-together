@@ -4,16 +4,25 @@ import {Logger} from "~/core/classes/logger.class.ts";
 import {buildRouter, loggerMiddleware, swaggerMiddleware} from "~/core/index.ts";
 import {DB} from "~/db/db.ts";
 import {errorMiddleware, staticMiddleware} from "~/middleware/index.ts";
+import {initCore} from "~/core/main.ts";
 
+/**
+ * Controller imports (services and models get imported and created as needed)
+ */
 import "~/controllers/authentication.controller.ts";
 import "~/controllers/users.controller.ts";
 
 export async function bootstrap() {
+  // Get environment variables
   await load({ envPath: "./.env", export: true });
-  Logger.level = Logger.convertLogLevelToEnum(Deno.env.get("LOG_LEVEL"));
 
+  initCore();
+
+  // Initialize Oak App
   const app = new Application();
+  // Build routes and instantiate controllers and their dependencies
   const router = buildRouter();
+  // Set a port to listen to
   const port = Number(Deno.env.get("PORT") ?? 8000);
 
   try {
