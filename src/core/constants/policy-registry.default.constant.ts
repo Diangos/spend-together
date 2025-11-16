@@ -1,5 +1,5 @@
 import { Context } from "jsr:@oak/oak";
-import {PolicyRegistry} from "~/core/types/authorization.type.ts";
+import {PolicyRegistry} from "../index.ts";
 
 export const DefaultPolicyRegistry: PolicyRegistry = {
     loaders:  new Map(),    // no loaders by default

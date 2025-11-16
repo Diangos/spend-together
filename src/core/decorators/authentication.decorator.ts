@@ -1,8 +1,24 @@
 import { Context } from "jsr:@oak/oak";
 import {DEFAULT_POLICY_ENGINE_TOKEN, META_AUTH_OPTIONS, META_AUTH_PUBLIC, POLICY_ENGINE_TOKEN} from "~/core/constants/authentication.constant.ts";
-import {DIContainer} from "~/core/index.ts";
-import {AuthorizationOptions, AuthorizeDecorator, PolicyEngine} from "~/core/types/authorization.type.ts";
-import {Logger} from "~/core/classes/logger.class.ts";
+import {AuthorizationOptions, AuthorizeDecorator, DIContainer, Logger, PolicyEngine} from "~/core/index.ts";
+
+/** Attach sugar helpers to the function object. */
+export const Authorize: AuthorizeDecorator = Object.assign(coreAuthorize, {
+    anyScopes: (...scopes: string[]) => coreAuthorize({ anyScopes: scopes }),
+    allScopes: (...scopes: string[]) => coreAuthorize({ allScopes: scopes }),
+    roles:     (...roles: string[]) => coreAuthorize({ rolesAny: roles }),
+    policies:  (...policies: string[]) => coreAuthorize({ policies: policies }),
+});
+
+/**
+ * Public route marker. The router or OpenAPI generator can read this.
+ */
+export function Public(): MethodDecorator {
+    return (_target: object, _propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
+        Reflect.defineMetadata(META_AUTH_PUBLIC, true, descriptor.value);
+        return descriptor;
+    }
+}
 
 /**
  * Core decorator factory (fail-closed on errors).
@@ -19,7 +35,6 @@ function coreAuthorize(options: AuthorizationOptions = "authenticated"): MethodD
             }
 
             if (!engine) {
-
                 // No engine registered → deny (fail-closed).
                 ctx.response.status = options.denyResponse?.code || 403;
                 ctx.response.body = {
@@ -60,24 +75,6 @@ function coreAuthorize(options: AuthorizationOptions = "authenticated"): MethodD
         return descriptor;
     };
 }
-
-/**
- * Public route marker. The router or OpenAPI generator can read this.
- */
-export function Public(): MethodDecorator {
-    return (_target: object, _propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
-        Reflect.defineMetadata(META_AUTH_PUBLIC, true, descriptor.value);
-        return descriptor;
-    }
-}
-
-/** Attach sugar helpers to the function object. */
-export const Authorize: AuthorizeDecorator = Object.assign(coreAuthorize, {
-    anyScopes: (...s: string[]) => coreAuthorize({ anyScopes: s }),
-    allScopes: (...s: string[]) => coreAuthorize({ allScopes: s }),
-    roles:     (...r: string[]) => coreAuthorize({ rolesAny: r }),
-    policies:  (...p: string[]) => coreAuthorize({ policies: p }),
-});
 
 function getPolicyEngine(): PolicyEngine {
     try {

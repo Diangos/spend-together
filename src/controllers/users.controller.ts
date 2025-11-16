@@ -1,13 +1,11 @@
 import {Context} from "jsr:@oak/oak";
-import {Logger} from "~/core/classes/logger.class.ts";
-import {Controller, Get, Post} from "~/core/index.ts";
+import {Authorize, Controller, Get, Logger, Post} from "~/core/index.ts";
 import {EmailType} from "~/enums/emailTypes.enum.ts";
 import UserModel from "~/models/users.model.ts";
 import {userActivationCodeRegenerationSchema, userActivationSchema, userRegistrationSchema} from "~/schemas/user.schema.ts";
 import {EmailService} from "~/services/email.service.ts";
 import {GeneralService} from "~/services/general.service.ts";
 import {UserService} from "~/services/user.service.ts";
-import {Authorize} from "~/core/decorators/authentication.decorator.ts";
 
 @Controller("users")
 export class UsersController {
@@ -19,8 +17,8 @@ export class UsersController {
     ) {
     }
 
-    @Authorize()
-    @Get("", {
+    @Authorize.policies( "users:read")
+    @Get("users", {
         summary: "Get all users",
         description: "Retrieves a list of all users",
         tags: ["Users"],

@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/deno.iml" filepath="$PROJECT_DIR$/.idea/deno.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/bloc-admin-be.iml" filepath="$PROJECT_DIR$/.idea/bloc-admin-be.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../bloc-admin-fe/.idea/bloc-admin-fe.iml" filepath="$PROJECT_DIR$/../bloc-admin-fe/.idea/bloc-admin-fe.iml" />
     </modules>
   </component>
 </project>

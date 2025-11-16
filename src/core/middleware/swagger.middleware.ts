@@ -1,6 +1,8 @@
 import {Context} from "jsr:@oak/oak";
 import {Logger} from "~/core/classes/logger.class.ts";
 import {controllers, OpenAPIV3_1, routes} from "~/core/index.ts";
+import {Middleware} from "~/core/decorators/middleware.decorator.ts";
+import {CustomMiddleware} from "~/core/interfaces/middleware.interface.ts";
 
 function generateOpenApiSpec(): OpenAPIV3_1.Document {
     const spec: OpenAPIV3_1.Document = {
@@ -53,29 +55,32 @@ function generateOpenApiSpec(): OpenAPIV3_1.Document {
     return spec;
 }
 
-export async function swaggerMiddleware(
-    ctx: Context,
-    next: () => Promise<unknown>,
-): Promise<void> {
-    const path = ctx.request.url.pathname;
+@Middleware()
+export class SwaggerMiddleware implements CustomMiddleware {
+         async handle(
+        ctx: Context,
+        next: () => Promise<unknown>,
+    ): Promise<void> {
+        const path = ctx.request.url.pathname;
 
-    // If the request is for the API, just continue
-    if (!["/openapi.json", "/docs"].some(allowedPaths => path.startsWith(allowedPaths))) {
-        await next();
-        return;
-    }
-
-    try {
-        if (path === "/openapi.json") {
-            ctx.response.body = generateOpenApiSpec();
+        // If the request is for the API, just continue
+        if (!["/openapi.json", "/docs"].some(allowedPaths => path.startsWith(allowedPaths))) {
+            await next();
+            return;
         }
 
-        if (path === "/docs") {
-            ctx.response.body = await Deno.readTextFile(
-                Deno.cwd() + "/src/core/static/swagger.html",
-            );
+        try {
+            if (path === "/openapi.json") {
+                ctx.response.body = generateOpenApiSpec();
+            }
+
+            if (path === "/docs") {
+                ctx.response.body = await Deno.readTextFile(
+                    Deno.cwd() + "/src/core/static/swagger.html",
+                );
+            }
+        } catch (e) {
+            Logger.error('Error in swagger middleware:', e);
         }
-    } catch (e) {
-        Logger.error('Error in swagger middleware:', e);
     }
 }

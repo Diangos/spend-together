@@ -1,7 +1,6 @@
 import {verify as verifyArgon2} from "jsr:@felix/argon2";
 import {Context} from "jsr:@oak/oak";
-import {Logger} from "~/core/classes/logger.class.ts";
-import {Controller, Post} from "~/core/index.ts";
+import {Controller, Logger, Post} from "~/core/index.ts";
 import AuthenticationModel from "~/models/authentication.model.ts";
 import UserModel from "~/models/users.model.ts";
 import {loginSchema} from "~/schemas/auth.schema.ts";

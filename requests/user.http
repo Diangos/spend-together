@@ -13,7 +13,7 @@ Content-Type: application/json
 
 ###
 # @name Get all users
-GET http://localhost:8000/api/v1/users
+GET http://localhost:8000/api/v1/users/users
 
 ###
 # @name Activate user

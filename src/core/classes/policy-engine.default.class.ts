@@ -1,9 +1,8 @@
 import type { Context } from "jsr:@oak/oak";
-import type { AuthorizationOptions, Decision, PolicyEngine, PolicyRegistry, RequestUser } from "./../types/authorization.type.ts";
+import type { AuthorizationOptions, Decision, PolicyEngine, PolicyRegistry, RequestUser } from "../index.ts";
 
 /**
  * Default policy engine. Should cover most common use cases.
- * TODO: Thoroughly vet this - it was written by an LLM
  */
 export class DefaultPolicyEngine implements PolicyEngine {
     constructor(private registry: PolicyRegistry) {}
