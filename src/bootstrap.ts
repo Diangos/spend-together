@@ -1,6 +1,5 @@
 import {Application, Context, } from "jsr:@oak/oak";
 import { oakCors } from "https://deno.land/x/cors/mod.ts";
-import {load} from "jsr:@std/dotenv";
 import {AppPolicyRegistry} from "~/authorization/policy.authorization.ts";
 import {
     buildRouter,
@@ -23,8 +22,6 @@ import "~/controllers/authentication.controller.ts";
 import "~/controllers/users.controller.ts";
 
 export async function bootstrap() {
-    // Get environment variables
-    await load({envPath: "./.env", export: true});
 
     // Initialize core components (Dependency Injection, Logger, etc.)
     initCore();

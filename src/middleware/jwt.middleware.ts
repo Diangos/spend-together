@@ -4,18 +4,30 @@ import {CustomMiddleware, Middleware, Logger } from "~/core/index.ts";
 import {AuthClaims} from "~/interfaces/authentication.interface.ts";
 
 // HS256 for simplicity; prefer RS256/ES256 if you rotate keys/public verify
-const accessSecretEnv = Deno.env.get("ACCESS_SECRET");
+// Lazy initialization to ensure environment variables are loaded first
+let ACCESS_SECRET: CryptoKey | null = null;
 
-if (!accessSecretEnv) {
-    throw new Error("ACCESS_SECRET environment variable is not set. Refusing to start for security reasons.");
-}
-const ACCESS_SECRET: CryptoKey = await crypto.subtle.importKey(
-    "raw",
-    (new TextEncoder().encode(accessSecretEnv)),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
+async function getAccessSecret(): Promise<CryptoKey> {
+    if (ACCESS_SECRET) {
+        return ACCESS_SECRET;
+    }
+
+    const accessSecretEnv = Deno.env.get("ACCESS_SECRET");
+
+    if (!accessSecretEnv) {
+        throw new Error("ACCESS_SECRET environment variable is not set. Refusing to start for security reasons.");
+    }
+
+    ACCESS_SECRET = await crypto.subtle.importKey(
+        "raw",
+        (new TextEncoder().encode(accessSecretEnv)),
+        { name: "HMAC", hash: "SHA-256" },
+        false,
         ["sign", "verify"] // allow both signing and verification
-);
+    );
+
+    return ACCESS_SECRET;
+}
 
 // If you ever move to RS256/ES256, import keys and pass the CryptoKey instead.
 
@@ -39,8 +51,11 @@ export class JwtMiddleware implements CustomMiddleware {
         }
 
         try {
+            // Get the access secret (lazy initialization)
+            const secret = await getAccessSecret();
+
             // 1) Verify signature
-            const claims = (await verify(token, ACCESS_SECRET)) as Partial<AuthClaims>;
+            const claims = (await verify(token, secret)) as Partial<AuthClaims>;
 
             // 2) Validate time-based claims (explicit; keeps behavior obvious)
             const now = Math.floor(Date.now() / 1000);

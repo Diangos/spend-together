@@ -1,27 +1,37 @@
 import {create, getNumericDate, Header, Payload} from "jsr:@zaubrik/djwt";
-import {load} from "jsr:@std/dotenv";
 import {Injectable} from "~/core/index.ts";
 
 // ───────────────────────────────────────────────────────────────────────────────
 // TODO: replace with DOTENV variables and secure secrets management
 // ───────────────────────────────────────────────────────────────────────────────
 
-await load({ envPath: "./.env", export: true });
 const ACCESS_TTL_MIN = 15;         // short-lived access token
 
 // HS256 for simplicity; prefer RS256/ES256 if you rotate keys/public verify
-const accessSecretEnv = Deno.env.get("ACCESS_SECRET");
+// Lazy initialization to ensure environment variables are loaded first
+let ACCESS_SECRET: CryptoKey | null = null;
 
-if (!accessSecretEnv) {
-    throw new Error("ACCESS_SECRET environment variable is not set. Refusing to start for security reasons.");
+async function getAccessSecret(): Promise<CryptoKey> {
+    if (ACCESS_SECRET) {
+        return ACCESS_SECRET;
+    }
+
+    const accessSecretEnv = Deno.env.get("ACCESS_SECRET");
+
+    if (!accessSecretEnv) {
+        throw new Error("ACCESS_SECRET environment variable is not set. Refusing to start for security reasons.");
+    }
+
+    ACCESS_SECRET = await crypto.subtle.importKey(
+        "raw",
+        (new TextEncoder().encode(accessSecretEnv)),
+        { name: "HMAC", hash: "SHA-256" },
+        false,
+        ["sign"] // add "verify" if you also verify in this module
+    );
+
+    return ACCESS_SECRET;
 }
-const ACCESS_SECRET: CryptoKey = await crypto.subtle.importKey(
-    "raw",
-    (new TextEncoder().encode(accessSecretEnv)),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"] // add "verify" if you also verify in this module
-);
 
 @Injectable()
 export class AuthenticationService {
@@ -40,6 +50,7 @@ export class AuthenticationService {
      * Keep claims minimal: sub, roles/scopes, optional org, jti, exp.
      */
     async signAccessJWT(claims: Partial<Payload>): Promise<string> {
+        const secret = await getAccessSecret();
         const header: Header = { alg: "HS256", typ: "JWT" };
         const payload: Payload = {
             ...claims,
@@ -47,6 +58,6 @@ export class AuthenticationService {
             iat: getNumericDate(0),
             exp: getNumericDate(ACCESS_TTL_MIN * 60),
         };
-        return await create(header, payload, ACCESS_SECRET);
+        return await create(header, payload, secret);
     }
 }
